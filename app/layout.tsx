@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 
@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   description: "A fullstack blog starter built with Next.js and Prisma.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface LayoutProps {
   children: React.ReactNode;
-}>) {
+}
+
+export default function RootLayout({ children }: Readonly<LayoutProps>) {
   return (
     <html lang="en">
       <body>
