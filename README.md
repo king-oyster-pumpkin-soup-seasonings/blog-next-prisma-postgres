@@ -1,3 +1,16 @@
-# Fullstack Blog Starter with Next.js and Prisma
+### Minimal Next.js + Prisma blog
 
-This is the starter project for the fullstack tutorial with Next.js, Prisma, Sign in with Vercel, and Prisma Postgres. You can find the final version of this project in the [`final`](https://github.com/prisma/blogr-nextjs-prisma/tree/final) branch of this repo.
+Quick start:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+or 
+
+Visit https://blog-next-prisma-postgres.vercel.app/
+
+> Built while following a [guide](https://vercel.com/kb/guide/nextjs-prisma-postgres) to learn how to build this app. 
+
+
