@@ -151,6 +151,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   } catch (error) {
     console.error("OAuth callback error:", error);
-    return NextResponse.redirect(new URL("/auth/error", request.url));
+    return NextResponse.redirect(new URL("/api/auth/error", request.url));
   }
 }

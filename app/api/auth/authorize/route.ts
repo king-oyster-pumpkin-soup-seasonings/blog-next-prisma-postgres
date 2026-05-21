@@ -19,50 +19,55 @@ function getClientId() {
 }
 
 export async function GET(request: NextRequest) {
-  const state = generateSecureRandomString();
-  const nonce = generateSecureRandomString();
-  const codeVerifier = generateSecureRandomString();
-  const codeChallenge = crypto
-    .createHash("sha256")
-    .update(codeVerifier)
-    .digest("base64url");
-  const cookieStore = await cookies();
-  const secure = process.env.NODE_ENV === "production";
+  try {
+    const state = generateSecureRandomString();
+    const nonce = generateSecureRandomString();
+    const codeVerifier = generateSecureRandomString();
+    const codeChallenge = crypto
+      .createHash("sha256")
+      .update(codeVerifier)
+      .digest("base64url");
+    const cookieStore = await cookies();
+    const secure = process.env.NODE_ENV === "production";
 
-  cookieStore.set("oauth_state", state, {
-    httpOnly: true,
-    maxAge: 10 * 60,
-    path: "/",
-    sameSite: "lax",
-    secure,
-  });
-  cookieStore.set("oauth_nonce", nonce, {
-    httpOnly: true,
-    maxAge: 10 * 60,
-    path: "/",
-    sameSite: "lax",
-    secure,
-  });
-  cookieStore.set("oauth_code_verifier", codeVerifier, {
-    httpOnly: true,
-    maxAge: 10 * 60,
-    path: "/",
-    sameSite: "lax",
-    secure,
-  });
+    cookieStore.set("oauth_state", state, {
+      httpOnly: true,
+      maxAge: 10 * 60,
+      path: "/",
+      sameSite: "lax",
+      secure,
+    });
+    cookieStore.set("oauth_nonce", nonce, {
+      httpOnly: true,
+      maxAge: 10 * 60,
+      path: "/",
+      sameSite: "lax",
+      secure,
+    });
+    cookieStore.set("oauth_code_verifier", codeVerifier, {
+      httpOnly: true,
+      maxAge: 10 * 60,
+      path: "/",
+      sameSite: "lax",
+      secure,
+    });
 
-  const params = new URLSearchParams({
-    client_id: getClientId(),
-    code_challenge: codeChallenge,
-    code_challenge_method: "S256",
-    nonce,
-    redirect_uri: `${request.nextUrl.origin}/api/auth/callback`,
-    response_type: "code",
-    scope: "openid email profile",
-    state,
-  });
+    const params = new URLSearchParams({
+      client_id: getClientId(),
+      code_challenge: codeChallenge,
+      code_challenge_method: "S256",
+      nonce,
+      redirect_uri: `${request.nextUrl.origin}/api/auth/callback`,
+      response_type: "code",
+      scope: "openid email profile",
+      state,
+    });
 
-  return NextResponse.redirect(
-    `https://vercel.com/oauth/authorize?${params.toString()}`,
-  );
+    return NextResponse.redirect(
+      `https://vercel.com/oauth/authorize?${params.toString()}`,
+    );
+  } catch (error) {
+    console.error("OAuth authorize error:", error);
+    return NextResponse.redirect(new URL("/api/auth/error", request.url));
+  }
 }
